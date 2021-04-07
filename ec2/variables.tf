@@ -1,19 +1,19 @@
 // Module specific variables
 variable "name" {
-  default = "test"
+  default = "Testjob-"
 }
 
 variable "environment" {
-  default = "test"
+  default = "Test"
 }
 
 variable "server_role" {
-  default = "test"
+  default = "Testing"
 }
 
 variable "instance_type" {
   description = "Type of instance"
-  default     = "t2.nano"
+  default     = "t2.micro"
 }
 
 variable "instance_count" {

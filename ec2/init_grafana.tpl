@@ -17,8 +17,6 @@ mkdir /etc/prometheus
 cd /etc/prometheus/ && touch prometheus.yml
 mkdir -p /data/prometheus
 
-# chown prometheus:prometheus /data/prometheus /etc/prometheus/*
-
 cat >> /etc/prometheus/prometheus.yml << EOF
 # A scrape configuration scraping a Node Exporter and the Prometheus server
 # itself.
@@ -32,7 +30,11 @@ EOF
 
 apt install net-tools
 docker volume create prometheus_volume
-docker run -d -p 9090:9090 --name prometheus --net=host -v /etc/prometheus:/etc/prometheus -v prometheus_volume/data/prometheus prom/prometheus --config.file="/etc/prometheus/prometheus.yml" --storage.tsdb.path="prometheus_volume/data/prometheus"
+docker run -d -p 9090:9090 --name prometheus \
+ --net=host -v /etc/prometheus:/etc/prometheus \
+-v prometheus_volume/data/prometheus prom/prometheus \
+--config.file="/etc/prometheus/prometheus.yml" \
+--storage.tsdb.path="prometheus_volume/data/prometheus"
 
 mkdir /etc/grafana && cd /etc/grafana
 wget -O grafana_config.ini https://raw.githubusercontent.com/grafana/grafana/master/conf/defaults.ini
@@ -49,4 +51,7 @@ datasources:
 EOF
 
 docker volume create grafana_volume
-docker run -d -p 3000:3000 --name grafana --net=host -v /etc/grafana/grafana_config.ini:/etc/grafana/grafana.ini -v grafana_volume:/var/lib/grafana -v /etc/grafana/provisioning/datasources/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml grafana/grafana
+docker run -d -p 3000:3000 --name grafana \
+--net=host -v /etc/grafana/grafana_config.ini:/etc/grafana/grafana.ini \
+-v grafana_volume:/var/lib/grafana \
+-v /etc/grafana/provisioning/datasources/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml grafana/grafana

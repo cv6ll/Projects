@@ -1,8 +1,6 @@
 provider "aws" {
   region  = var.aws_region
   profile = var.aws_profile
-  access_key = "eNTER KEY"
-  secret_key = "ENTER KEY"
 }
 
 module "network" {
@@ -23,7 +21,7 @@ module "GrafanaProm" {
   name                 = "Grafana-Prom"
   environment          = var.app_env
   instance_type        = var.instance_type
-  key_name             = "test1"
+  key_name             = "Enter AWS keypair name here"
   security_group_id    = [module.security.promgraf1_sc_id]
   subnet_id            = module.network.promgraf_public_subnet_id
   ami_id               = var.aws_amis[var.aws_region]
